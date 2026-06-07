@@ -23,3 +23,4 @@ warn_return_any = true
 warn_unused_ignores = true
 warn_redundant_casts = true
 disallow_any_generics = true
+warn_untyped_defs = true
