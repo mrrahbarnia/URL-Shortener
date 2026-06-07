@@ -7,7 +7,6 @@ from src.core.config import ENVS
 from src.modules.shared.constants import Environment
 
 
-
 class AppBaseException(HTTPException):
     def __init__(
         self,
@@ -28,8 +27,9 @@ class AppBaseException(HTTPException):
         super().__init__(status_code=status_code)
 
 
-
-async def app_base_exception_handler(request: Request, exc: AppBaseException) -> JSONResponse:
+async def app_base_exception_handler(
+    request: Request, exc: AppBaseException
+) -> JSONResponse:
     return JSONResponse(
         status_code=exc.status_code,
         content={
@@ -40,6 +40,5 @@ async def app_base_exception_handler(request: Request, exc: AppBaseException) ->
     )
 
 
-
 def register_exception_handlers(app: FastAPI) -> None:
-    app.add_exception_handler(AppBaseException, app_base_exception_handler) # type: ignore
+    app.add_exception_handler(AppBaseException, app_base_exception_handler)  # type: ignore

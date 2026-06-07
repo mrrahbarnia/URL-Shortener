@@ -22,5 +22,5 @@ class ShortenURLResponse(BaseModel):
     id: ShortURLID
     original_url: str
     short_code: str
-    expires_at: datetime
+    expires_at: datetime | None = None
     created_at: datetime

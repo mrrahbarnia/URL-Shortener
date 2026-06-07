@@ -6,7 +6,7 @@ from src.core.config import ENVS
 ALPHABET = string.digits + string.ascii_letters  # 0-9A-Za-z
 
 
-class ICodeGenerator:
+class CodeGenerator:
     def generate_code(self, length: int = ENVS.CONSTANT.SHORT_CODE_LENGTH) -> str:
         return "".join(random.choices(ALPHABET, k=length))
 
