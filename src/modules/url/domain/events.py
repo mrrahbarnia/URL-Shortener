@@ -5,6 +5,6 @@ from src.modules.shared.constants import DomainEvent
 
 
 @dataclass(frozen=True)
-class URLResolved(DomainEvent):
+class LinkVisited(DomainEvent):
     id: UUID
     
