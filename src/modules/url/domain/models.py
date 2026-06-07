@@ -15,12 +15,14 @@ class LinkExpired(DomainError):
 
 @dataclass
 class ShortURL:
-    id: value_objects.ShortURLID
     original_url: value_objects.URL
     short_code: value_objects.ShortCode
     created_at: datetime
     expires_at: datetime | None = None
     click_count: int = 0
+    id: value_objects.ShortURLID = field(
+        default_factory=lambda: value_objects.ShortURLID(uuid4()), init=False
+    )
 
     _events: list[DomainEvent] = field(default_factory=lambda: list(), init=False)
 
@@ -33,7 +35,7 @@ class ShortURL:
     def rgister_click(self) -> None:
         self.click_count += 1
 
-        self._events.append(LinkVisited(id=self.id))
+        self._events.append(LinkVisited(short_code=self.short_code.value))
 
     def is_expired(self) -> bool:
         if self.expires_at is None:
@@ -45,8 +47,10 @@ class ShortURL:
     def create(
         cls, original_url: str, short_code: str, expires_at: datetime | None
     ) -> "ShortURL":
+        if expires_at and expires_at < datetime.now(UTC):
+            raise DomainError(message="expies_at cannot be in past")
+
         return ShortURL(
-            id=value_objects.ShortURLID(uuid4()),
             original_url=value_objects.URL(original_url),
             short_code=value_objects.ShortCode(short_code),
             created_at=datetime.now(UTC),

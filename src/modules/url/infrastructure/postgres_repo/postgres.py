@@ -35,3 +35,15 @@ class URLRepository:
     def __init__(self, session: AsyncSession) -> None:
         self.session = session
         self._seen: T.Set[domain_models.ShortURL] = set()
+
+    async def add(self, domain_url: domain_models.ShortURL) -> None:
+        stmt = sa.insert(db_models.URL).values(
+            {
+                db_models.URL.id: domain_url.id,
+                db_models.URL.short_code: domain_url.short_code.value,
+                db_models.URL.original_url: domain_url.original_url.value,
+            }
+        )
+        await self.session.execute(stmt)
+
+    async def get_by_short_code(self, code: str) -> domain_models.ShortURL | None: ...

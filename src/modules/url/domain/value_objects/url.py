@@ -14,12 +14,12 @@ class URL:
     value: str
 
     def __post_init__(self) -> None:
-        # TODO - We can use Regex for validation
+        # TODO - It's better to use Regex for validation
 
         parsed_url = urlparse(url=self.value)
 
         if not parsed_url.scheme:
             raise InvalidURL(message="URL must containt schema")
-        
+
         if not parsed_url.netloc:
             raise InvalidURL(message="URL must contain host")

@@ -35,7 +35,7 @@ class URLCommandHandler:
                 # So we have to try again until a unique generate.
 
                 for _ in range(FALLBACK_CODE_GENERATION_MAX_RETRIES):
-                    generated_code = code_generator.generate()
+                    generated_code = code_generator.generate_code()
 
                     existing = await uow.urls.get_by_short_code(generated_code)
 
