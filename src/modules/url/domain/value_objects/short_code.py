@@ -1,9 +1,10 @@
 import re
 from dataclasses import dataclass
 
+from src.core.config import ENVS
 from src.modules.shared.constants import DomainError
 
-SHORT_CODE_REGEX = r'^[A-Za-z0-9]{7}$'
+SHORT_CODE_REGEX = rf"^[A-Za-z0-9]{{{ENVS.CONSTANT.SHORT_CODE_LENGTH}}}$"
 
 
 class InvalidShortCode(DomainError):
@@ -19,4 +20,6 @@ class ShortCode:
 
     def __post_init__(self) -> None:
         if not self._pattern.match(self.value):
-            raise InvalidShortCode(message="Short code must be alphanumeric and also 7 length")
+            raise InvalidShortCode(
+                message="Short code must be alphanumeric and also 7 length"
+            )
