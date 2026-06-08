@@ -8,12 +8,15 @@ from ..domain.models import ShortURL
 
 class ICodeGenerator(T.Protocol):
     def generate_code(self, length: int = ENVS.CONSTANT.SHORT_CODE_LENGTH) -> str: ...
-
     def encode_base62(self, num: int) -> str: ...
 
 
 class ICodeRepository(T.Protocol):
     async def pop_unused(self) -> str | None: ...
+    async def count_unused(self) -> int: ...
+    async def bulk_insert_unused(self, codes: set[str]) -> int:
+        # bulk_insert_unused must return successfully inserted rows count
+        ...
 
 
 class IURLRepository(T.Protocol):

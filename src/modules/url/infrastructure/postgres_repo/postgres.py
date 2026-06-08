@@ -2,6 +2,7 @@ import typing as T
 import sqlalchemy as sa
 
 from sqlalchemy.ext.asyncio import AsyncSession
+from sqlalchemy.dialects.postgresql import insert as upsert
 from src.modules.shared.constants import DBLock
 
 from . import models as db_models
@@ -12,6 +13,21 @@ from ...domain import models as domain_models
 class CodeRepository:
     def __init__(self, session: AsyncSession) -> None:
         self.session = session
+
+    async def count_unused(self) -> int:
+        stmt = sa.select(sa.func.count()).where(db_models.CODE.is_used.is_(False))
+        unused_count = await self.session.scalar(stmt)
+        return unused_count if unused_count else 0
+
+    async def bulk_insert_unused(self, codes: set[str]) -> int:
+        values = [{db_models.CODE.code: code} for code in codes]
+        stmt = (
+            upsert(db_models.CODE)
+            .values(values)
+            .on_conflict_do_nothing()
+            .returning(db_models.CODE.code)
+        )
+        return len((await self.session.scalars(stmt)).all())
 
     async def pop_unused(self) -> str | None:
         cte = (

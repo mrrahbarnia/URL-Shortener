@@ -13,6 +13,7 @@ class _ENVS(BaseSettings):
     POSTGRESQL: schemas.PostgreSQL
     FASTAPI: schemas.FastAPI
     CONSTANT: schemas.Constant
+    CODE_GENERATOR: schemas.CodeGenerator
 
 
 ENVS = _ENVS()  # type: ignore
