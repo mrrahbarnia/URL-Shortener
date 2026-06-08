@@ -3,7 +3,7 @@ import logging
 
 from fastapi import status
 
-from src.core.setup.exception_handler import AppBaseException
+from src.modules.shared.presentation import AppBaseException
 from src.modules.shared.constants import Error, ErrorCode
 
 from . import exceptions as exc
@@ -32,7 +32,6 @@ def map_errors_to_http_exceptions(
 def handle_service_errors(result: V | Error) -> V:
     if isinstance(result, Error):
         exception = map_errors_to_http_exceptions(result)
-
         if exception.status_code >= status.HTTP_500_INTERNAL_SERVER_ERROR:
             logger.error(
                 f"Application error: {exception.message}",

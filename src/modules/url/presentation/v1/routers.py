@@ -2,9 +2,10 @@ import typing as T
 import traceback
 import logging
 
-from fastapi import APIRouter, status, Depends
+from fastapi import APIRouter, status, responses, Depends
 
 from src.modules.shared.constants import DomainError
+from src.modules.shared.presentation import AppBaseException
 
 from . import dtos
 from .exceptions import ServerError, BadRequestException
@@ -31,7 +32,7 @@ async def shorten_link(
             url=str(payload.original_url), expires_at=payload.expires_at
         )
         service_result = await commands.URLCommandHandler(uow).shorten_url(
-            code_generator=code_generator, command=cmd
+            code_generator=code_generator, cmd=cmd
         )
         short_url = handle_service_errors(service_result)
         return HTTPResponse[dtos.ShortenURLResponse](
@@ -45,6 +46,35 @@ async def shorten_link(
                 created_at=short_url.created_at,
             ),
         )
+
+    except AppBaseException:
+        raise
+
+    except DomainError as ex:
+        raise BadRequestException(data=None, message=ex.message)
+
+    except Exception as ex:
+        logger.critical(traceback.format_exc())
+        raise ServerError(data=str(ex))
+
+
+@router.get("/{short_code}", status_code=status.HTTP_302_FOUND)
+async def visit_link(
+    short_code: str,
+    uow: T.Annotated[UOW, Depends(get_uow)],
+) -> responses.RedirectResponse:
+    try:
+        cmd = commands.VisitLink(short_code)
+        service_result = await commands.URLCommandHandler(uow).visit_link(cmd)
+
+        original_url = handle_service_errors(service_result)
+
+        return responses.RedirectResponse(
+            url=original_url, status_code=status.HTTP_302_FOUND
+        )
+
+    except AppBaseException:
+        raise
 
     except DomainError as ex:
         raise BadRequestException(data=None, message=ex.message)

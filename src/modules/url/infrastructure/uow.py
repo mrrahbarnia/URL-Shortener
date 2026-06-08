@@ -9,7 +9,8 @@ from .postgres_repo import CodeRepository, URLRepository
 
 class UOW:
     def __init__(
-        self, session_maker: async_sessionmaker[AsyncSession] = SESSION_MAKER
+        self,
+        session_maker: async_sessionmaker[AsyncSession] = SESSION_MAKER,
     ) -> None:
         self.session_maker = session_maker
         self._urls: URLRepository | None = None

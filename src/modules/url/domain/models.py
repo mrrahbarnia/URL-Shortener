@@ -19,9 +19,8 @@ class ShortURL:
     short_code: value_objects.ShortCode
     created_at: datetime
     expires_at: datetime | None = None
-    click_count: int = 0
     id: value_objects.ShortURLID = field(
-        default_factory=lambda: value_objects.ShortURLID(uuid4()), init=False
+        default_factory=lambda: value_objects.ShortURLID(uuid4())
     )
 
     _events: list[DomainEvent] = field(default_factory=lambda: list(), init=False)
@@ -33,8 +32,6 @@ class ShortURL:
         return self.original_url
 
     def rgister_click(self) -> None:
-        self.click_count += 1
-
         self._events.append(LinkVisited(short_code=self.short_code.value))
 
     def is_expired(self) -> bool:
@@ -55,5 +52,4 @@ class ShortURL:
             short_code=value_objects.ShortCode(short_code),
             created_at=datetime.now(UTC),
             expires_at=expires_at,
-            click_count=0,
         )

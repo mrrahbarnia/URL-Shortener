@@ -1,6 +1,7 @@
 import typing as T
 
 from src.core.config import ENVS
+from src.modules.shared.constants import DBLock
 
 from ..domain.models import ShortURL
 
@@ -17,7 +18,9 @@ class ICodeRepository(T.Protocol):
 
 class IURLRepository(T.Protocol):
     async def add(self, domain_url: ShortURL) -> None: ...
-    async def get_by_short_code(self, code: str) -> ShortURL | None: ...
+    async def get_by_short_code(
+        self, short_code: str, lock: DBLock = DBLock(is_active=False)
+    ) -> ShortURL | None: ...
 
 
 class IUOW(T.Protocol):

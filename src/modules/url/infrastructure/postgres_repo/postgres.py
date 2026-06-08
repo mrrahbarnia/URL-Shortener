@@ -2,8 +2,10 @@ import typing as T
 import sqlalchemy as sa
 
 from sqlalchemy.ext.asyncio import AsyncSession
+from src.modules.shared.constants import DBLock
 
 from . import models as db_models
+from ...domain import value_objects
 from ...domain import models as domain_models
 
 
@@ -42,8 +44,37 @@ class URLRepository:
                 db_models.URL.id: domain_url.id,
                 db_models.URL.short_code: domain_url.short_code.value,
                 db_models.URL.original_url: domain_url.original_url.value,
+                db_models.URL.expires_at: domain_url.expires_at,
             }
         )
         await self.session.execute(stmt)
 
-    async def get_by_short_code(self, code: str) -> domain_models.ShortURL | None: ...
+    async def get_by_short_code(
+        self, short_code: str, lock: DBLock = DBLock(is_active=False)
+    ) -> domain_models.ShortURL | None:
+        stmt = (
+            sa.select(db_models.URL)
+            .where(db_models.URL.short_code == short_code)
+            .limit(1)
+        )
+
+        if lock.is_active:
+            await self.session.execute(
+                sa.text(f"SET LOCAL lock_timeout = '{lock.timeout_second}s'")
+            )
+            stmt = stmt.with_for_update(skip_locked=lock.skip_locked)
+
+        try:
+            db_url = await self.session.scalar(stmt)
+            if db_url is None:
+                return None
+
+            return domain_models.ShortURL(
+                id=db_url.id,
+                original_url=value_objects.URL(db_url.original_url),
+                short_code=value_objects.ShortCode(db_url.short_code),
+                created_at=db_url.created_at,
+                expires_at=db_url.expires_at,
+            )
+        except Exception:
+            return None

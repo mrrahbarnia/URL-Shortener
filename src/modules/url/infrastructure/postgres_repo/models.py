@@ -25,6 +25,7 @@ class URL(BaseModel):
     short_code: so.Mapped[str] = so.mapped_column(
         sa.String(ENVS.CONSTANT.SHORT_CODE_LENGTH), unique=True
     )
+    expires_at: so.Mapped[datetime | None]
     original_url: so.Mapped[str]
     updated_at: so.Mapped[datetime] = so.mapped_column(
         default=lambda: datetime.now(), onupdate=lambda: datetime.now()

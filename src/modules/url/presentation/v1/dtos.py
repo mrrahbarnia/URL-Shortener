@@ -24,3 +24,7 @@ class ShortenURLResponse(BaseModel):
     short_code: str
     expires_at: datetime | None = None
     created_at: datetime
+
+
+class VisitURLResponse(BaseModel):
+    original_url: str

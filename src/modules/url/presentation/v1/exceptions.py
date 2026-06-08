@@ -1,6 +1,6 @@
 from fastapi import status
 
-from src.core.setup.exception_handler import AppBaseException
+from src.modules.shared.presentation import AppBaseException
 
 
 class ServerError(AppBaseException):
