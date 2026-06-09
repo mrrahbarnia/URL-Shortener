@@ -18,7 +18,6 @@ class ShortURL:
     id: value_objects.ShortURLID
     original_url: value_objects.URL
     short_code: value_objects.ShortCode
-    created_at: datetime
     expires_at: datetime | None = None
 
     _events: list[DomainEvent] = field(default_factory=lambda: list(), init=False)
@@ -49,6 +48,5 @@ class ShortURL:
             id=value_objects.ShortURLID(id),
             original_url=value_objects.URL(original_url),
             short_code=value_objects.ShortCode(short_code),
-            created_at=datetime.now(UTC),
             expires_at=expires_at,
         )

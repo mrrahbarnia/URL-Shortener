@@ -22,6 +22,7 @@ class CODE(BaseModel):
 class URL(BaseModel):
     __tablename__ = "urls"
 
+    client_ip: so.Mapped[str] = so.mapped_column(sa.String(100))
     short_code: so.Mapped[str] = so.mapped_column(
         sa.String(ENVS.CONSTANT.SHORT_CODE_LENGTH), unique=True
     )

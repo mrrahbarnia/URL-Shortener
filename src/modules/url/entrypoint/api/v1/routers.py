@@ -11,7 +11,7 @@ from . import dtos
 from .exceptions import ServerError, BadRequestException
 from .exception_mapper import handle_service_errors
 from .response import HTTPResponse
-from .dependencies import get_uow, get_code_generator
+from .dependencies import get_uow, get_code_generator, get_client_ip
 from ....service import commands
 from ....infrastructure.uow import UOW
 from ....infrastructure.code_generator import CodeGenerator
@@ -25,11 +25,14 @@ router = APIRouter(prefix="/url")
 async def shorten_link(
     payload: dtos.ShortenURLRequest,
     uow: T.Annotated[UOW, Depends(get_uow)],
+    client_ip: T.Annotated[str, Depends(get_client_ip)],
     code_generator: T.Annotated[CodeGenerator, Depends(get_code_generator)],
 ) -> HTTPResponse[dtos.ShortenURLResponse]:
     try:
         cmd = commands.ShortURLCommand(
-            url=str(payload.original_url), expires_at=payload.expires_at
+            url=str(payload.original_url),
+            expires_at=payload.expires_at,
+            client_ip=client_ip,
         )
         service_result = await commands.URLCommandHandler(uow).shorten_url(
             code_generator=code_generator, cmd=cmd
@@ -43,7 +46,6 @@ async def shorten_link(
                 original_url=short_url.original_url.value,
                 short_code=short_url.short_code.value,
                 expires_at=short_url.expires_at,
-                created_at=short_url.created_at,
             ),
         )
 

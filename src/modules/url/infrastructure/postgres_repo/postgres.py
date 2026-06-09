@@ -54,13 +54,43 @@ class URLRepository:
         self.session = session
         self._seen: T.Set[domain_models.ShortURL] = set()
 
-    async def add(self, domain_url: domain_models.ShortURL) -> None:
+    async def exist_not_expired_with_original_url_client_ip(
+        self, original_url: str, client_ip: str
+    ) -> domain_models.ShortURL | None:
+        stmt = (
+            sa.select(db_models.URL)
+            .where(
+                sa.and_(
+                    db_models.URL.original_url == original_url,
+                    db_models.URL.client_ip == client_ip,
+                    sa.or_(
+                        db_models.URL.expires_at.is_(None),
+                        db_models.URL.expires_at >= sa.func.now(),
+                    ),
+                )
+            )
+            .limit(1)
+        )
+        db_url = await self.session.scalar(stmt)
+        return (
+            domain_models.ShortURL(
+                id=db_url.id,
+                original_url=value_objects.URL(db_url.original_url),
+                short_code=value_objects.ShortCode(db_url.short_code),
+                expires_at=db_url.expires_at,
+            )
+            if db_url is not None
+            else None
+        )
+
+    async def add(self, domain_url: domain_models.ShortURL, client_ip: str) -> None:
         stmt = sa.insert(db_models.URL).values(
             {
                 db_models.URL.id: domain_url.id,
                 db_models.URL.short_code: domain_url.short_code.value,
                 db_models.URL.original_url: domain_url.original_url.value,
                 db_models.URL.expires_at: domain_url.expires_at,
+                db_models.URL.client_ip: client_ip,
             }
         )
         await self.session.execute(stmt)
@@ -89,7 +119,6 @@ class URLRepository:
                 id=db_url.id,
                 original_url=value_objects.URL(db_url.original_url),
                 short_code=value_objects.ShortCode(db_url.short_code),
-                created_at=db_url.created_at,
                 expires_at=db_url.expires_at,
             )
         except Exception:

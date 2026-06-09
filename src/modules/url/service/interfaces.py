@@ -20,9 +20,12 @@ class ICodeRepository(T.Protocol):
 
 
 class IURLRepository(T.Protocol):
-    async def add(self, domain_url: ShortURL) -> None: ...
+    async def add(self, domain_url: ShortURL, client_ip: str) -> None: ...
     async def get_by_short_code(
         self, short_code: str, lock: DBLock = DBLock(is_active=False)
+    ) -> ShortURL | None: ...
+    async def exist_not_expired_with_original_url_client_ip(
+        self, original_url: str, client_ip: str
     ) -> ShortURL | None: ...
 
 
