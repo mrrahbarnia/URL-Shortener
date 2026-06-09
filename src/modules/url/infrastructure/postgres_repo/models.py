@@ -1,7 +1,7 @@
 import sqlalchemy as sa
 import sqlalchemy.orm as so
 
-from uuid import uuid4
+from uuid6 import uuid7
 from datetime import datetime
 
 from src.core.config import ENVS
@@ -32,5 +32,5 @@ class URL(BaseModel):
     )
     created_at: so.Mapped[datetime] = so.mapped_column(default=lambda: datetime.now())
     id: so.Mapped[ShortURLID] = so.mapped_column(
-        primary_key=True, default_factory=lambda: uuid4()
+        primary_key=True, default_factory=lambda: uuid7()
     )

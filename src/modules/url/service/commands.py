@@ -2,6 +2,8 @@ import random
 from dataclasses import dataclass
 from datetime import datetime
 
+from uuid6 import uuid7
+
 from src.modules.shared.constants import Error
 
 from .interfaces import IUOW, ICodeGenerator
@@ -57,6 +59,7 @@ class URLCommandHandler:
                     )
 
             domain_url = ShortURL.create(
+                id=uuid7(),
                 original_url=cmd.url,
                 short_code=unused_code,
                 expires_at=cmd.expires_at,

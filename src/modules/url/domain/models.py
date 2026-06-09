@@ -1,6 +1,6 @@
 from dataclasses import dataclass, field
 from datetime import UTC, datetime
-from uuid import uuid4
+from uuid import UUID
 
 from src.modules.shared.constants import DomainError, DomainEvent
 
@@ -15,13 +15,11 @@ class LinkExpired(DomainError):
 
 @dataclass
 class ShortURL:
+    id: value_objects.ShortURLID
     original_url: value_objects.URL
     short_code: value_objects.ShortCode
     created_at: datetime
     expires_at: datetime | None = None
-    id: value_objects.ShortURLID = field(
-        default_factory=lambda: value_objects.ShortURLID(uuid4())
-    )
 
     _events: list[DomainEvent] = field(default_factory=lambda: list(), init=False)
 
@@ -42,12 +40,13 @@ class ShortURL:
 
     @classmethod
     def create(
-        cls, original_url: str, short_code: str, expires_at: datetime | None
+        cls, id: UUID, original_url: str, short_code: str, expires_at: datetime | None
     ) -> "ShortURL":
         if expires_at and expires_at < datetime.now(UTC):
             raise DomainError(message="expies_at cannot be in past")
 
         return ShortURL(
+            id=value_objects.ShortURLID(id),
             original_url=value_objects.URL(original_url),
             short_code=value_objects.ShortCode(short_code),
             created_at=datetime.now(UTC),
