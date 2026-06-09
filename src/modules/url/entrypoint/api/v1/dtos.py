@@ -8,7 +8,7 @@ from ....domain.value_objects import ShortURLID
 class ShortenURLRequest(BaseModel):
     # TODO - It's better to use Regex for original_url validation
     original_url: HttpUrl
-    expires_at: datetime | None = None
+    expires_at: datetime = datetime(9999, 12, 31, tzinfo=UTC)
 
     @field_validator("expires_at")
     @classmethod

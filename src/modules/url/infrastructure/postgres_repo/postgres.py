@@ -1,6 +1,8 @@
 import typing as T
 import sqlalchemy as sa
 
+from datetime import datetime, UTC
+
 from sqlalchemy.ext.asyncio import AsyncSession
 from sqlalchemy.dialects.postgresql import insert as upsert
 from src.modules.shared.constants import DBLock
@@ -65,7 +67,7 @@ class URLRepository:
                     db_models.URL.client_ip == client_ip,
                     sa.or_(
                         db_models.URL.expires_at.is_(None),
-                        db_models.URL.expires_at >= sa.func.now(),
+                        db_models.URL.expires_at >= datetime.now(UTC),
                     ),
                 )
             )

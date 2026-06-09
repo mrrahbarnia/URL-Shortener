@@ -16,7 +16,7 @@ FALLBACK_CODE_GENERATION_MAX_RETRIES = 1
 class ShortURLCommand:
     url: str
     client_ip: str
-    expires_at: datetime | None = None
+    expires_at: datetime
 
 
 @dataclass(frozen=True)

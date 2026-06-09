@@ -18,7 +18,7 @@ class ShortURL:
     id: value_objects.ShortURLID
     original_url: value_objects.URL
     short_code: value_objects.ShortCode
-    expires_at: datetime | None = None
+    expires_at: datetime
 
     _events: list[DomainEvent] = field(default_factory=lambda: list(), init=False)
 
@@ -32,16 +32,13 @@ class ShortURL:
         self._events.append(LinkVisited(short_code=self.short_code.value))
 
     def is_expired(self) -> bool:
-        if self.expires_at is None:
-            return False
-
         return datetime.now(UTC) >= self.expires_at
 
     @classmethod
     def create(
-        cls, id: UUID, original_url: str, short_code: str, expires_at: datetime | None
+        cls, id: UUID, original_url: str, short_code: str, expires_at: datetime
     ) -> "ShortURL":
-        if expires_at and expires_at < datetime.now(UTC):
+        if expires_at < datetime.now(UTC):
             raise DomainError(message="expies_at cannot be in past")
 
         return ShortURL(
