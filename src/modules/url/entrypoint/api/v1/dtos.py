@@ -2,7 +2,7 @@ from datetime import datetime, UTC
 
 from pydantic import BaseModel, HttpUrl, field_validator
 
-from ...domain.value_objects import ShortURLID
+from ....domain.value_objects import ShortURLID
 
 
 class ShortenURLRequest(BaseModel):

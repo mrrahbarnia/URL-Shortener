@@ -1,7 +1,7 @@
 from fastapi import FastAPI, Request
 from fastapi.responses import JSONResponse
 
-from src.modules.shared.presentation import AppBaseException
+from src.modules.shared.entrypoint import AppBaseException
 
 
 async def app_base_exception_handler(

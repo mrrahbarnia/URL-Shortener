@@ -3,7 +3,7 @@ import logging
 
 from fastapi import status
 
-from src.modules.shared.presentation import AppBaseException
+from src.modules.shared.entrypoint import AppBaseException
 from src.modules.shared.constants import Error, ErrorCode
 
 from . import exceptions as exc

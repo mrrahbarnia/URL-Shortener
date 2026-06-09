@@ -5,16 +5,16 @@ import logging
 from fastapi import APIRouter, status, responses, Depends
 
 from src.modules.shared.constants import DomainError
-from src.modules.shared.presentation import AppBaseException
+from src.modules.shared.entrypoint import AppBaseException
 
 from . import dtos
 from .exceptions import ServerError, BadRequestException
 from .exception_mapper import handle_service_errors
 from .response import HTTPResponse
 from .dependencies import get_uow, get_code_generator
-from ...service import commands
-from ...infrastructure.uow import UOW
-from ...infrastructure.code_generator import CodeGenerator
+from ....service import commands
+from ....infrastructure.uow import UOW
+from ....infrastructure.code_generator import CodeGenerator
 
 logger = logging.getLogger(__name__)
 
@@ -54,7 +54,7 @@ async def shorten_link(
         raise BadRequestException(data=None, message=ex.message)
 
     except Exception as ex:
-        logger.critical(traceback.format_exc())
+        logger.error(traceback.format_exc())
         raise ServerError(data=str(ex))
 
 
@@ -80,5 +80,5 @@ async def visit_link(
         raise BadRequestException(data=None, message=ex.message)
 
     except Exception as ex:
-        logger.critical(traceback.format_exc())
+        logger.error(traceback.format_exc())
         raise ServerError(data=str(ex))
