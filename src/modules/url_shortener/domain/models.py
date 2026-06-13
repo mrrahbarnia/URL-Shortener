@@ -2,7 +2,7 @@ from dataclasses import dataclass, field
 from datetime import UTC, datetime
 from uuid import UUID
 
-from src.modules.shared.constants import DomainError, DomainEvent
+from src.modules.shared.constants import AggregateRoot, DomainError, DomainEvent
 
 from . import value_objects
 from .events import LinkVisited
@@ -14,13 +14,15 @@ class LinkExpired(DomainError):
 
 
 @dataclass
-class ShortURL:
+class ShortURL(AggregateRoot):
     id: value_objects.ShortURLID
     original_url: value_objects.URL
     short_code: value_objects.ShortCode
     expires_at: datetime
 
-    _events: list[DomainEvent] = field(default_factory=lambda: list(), init=False)
+    events: list[DomainEvent] = field(
+        default_factory=lambda: list(), init=False, hash=False
+    )
 
     def resolve(self) -> value_objects.URL:
         if self.is_expired():
@@ -29,7 +31,7 @@ class ShortURL:
         return self.original_url
 
     def rgister_click(self) -> None:
-        self._events.append(LinkVisited(short_code=self.short_code.value))
+        self.events.append(LinkVisited(short_code=self.short_code.value))
 
     def is_expired(self) -> bool:
         return datetime.now(UTC) >= self.expires_at

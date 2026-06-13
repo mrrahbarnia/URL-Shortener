@@ -1,4 +1,3 @@
-import typing as T
 import sqlalchemy as sa
 
 from datetime import datetime, UTC
@@ -54,7 +53,9 @@ class CodeRepository:
 class URLRepository:
     def __init__(self, session: AsyncSession) -> None:
         self.session = session
-        self._seen: T.Set[domain_models.ShortURL] = set()
+
+        # self.seen: T.Set[domain_models.ShortURL] = set()
+        self.seen: dict[value_objects.ShortURLID, domain_models.ShortURL] = {}
 
     async def exist_not_expired_with_original_url_client_ip(
         self, original_url: str, client_ip: str
@@ -95,6 +96,8 @@ class URLRepository:
                 db_models.URL.client_ip: client_ip,
             }
         )
+
+        self.seen[domain_url.id] = domain_url
         await self.session.execute(stmt)
 
     async def get_by_short_code(
@@ -117,11 +120,14 @@ class URLRepository:
             if db_url is None:
                 return None
 
-            return domain_models.ShortURL(
+            domain_url = domain_models.ShortURL(
                 id=db_url.id,
                 original_url=value_objects.URL(db_url.original_url),
                 short_code=value_objects.ShortCode(db_url.short_code),
                 expires_at=db_url.expires_at,
             )
+            self.seen[domain_url.id] = domain_url
+
+            return domain_url
         except Exception:
             return None
