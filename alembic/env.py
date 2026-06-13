@@ -9,7 +9,8 @@ from alembic import context
 
 from src.core.config import ENVS
 from src.modules.shared.infrastructure import BaseModel
-from src.modules.url.infrastructure.postgres_repo import models  # type: ignore # noqa
+from src.modules.url_shortener.infrastructure import db_models as url_models  # type: ignore # noqa
+from src.modules.events.infrastructure import db_models as outbox_models  # type: ignore # noqa
 
 # this is the Alembic Config object, which provides
 # access to the values within the .ini file in use.

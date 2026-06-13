@@ -14,6 +14,7 @@ class _ENVS(BaseSettings):
     FASTAPI: schemas.FastAPI
     CONSTANT: schemas.Constant
     CODE_GENERATOR: schemas.CodeGenerator
+    OUTBOX_CONSUMER: schemas.OutboxConsumer
 
 
 ENVS = _ENVS()  # type: ignore

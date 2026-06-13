@@ -1,7 +1,7 @@
 import typing as T
 import asyncio
 
-from .interfaces import IUOW, ICodeGenerator
+from .interfaces import ICodeGenerator, IUOW
 
 from src.core.config import ENVS
 

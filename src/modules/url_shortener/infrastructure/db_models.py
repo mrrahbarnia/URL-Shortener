@@ -7,7 +7,7 @@ from datetime import datetime, UTC
 from src.core.config import ENVS
 from src.modules.shared.infrastructure import BaseModel
 
-from ...domain.value_objects import ShortURLID
+from ..domain.value_objects import ShortURLID
 
 
 class CODE(BaseModel):

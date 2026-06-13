@@ -24,7 +24,22 @@ services:
       context: .
       dockerfile: Dockerfile
       target: testing
-    command: python -u -m src.modules.url.entrypoint.schedular.main
+    command: python -u -m src.modules.url_shortener.entrypoint.schedular.main
+    volumes:
+      - ./src:/app/src/
+    env_file:
+      - ./.env
+    depends_on:
+      - app
+      - db
+    restart: always
+  
+  outbox_consumer:
+    build:
+      context: .
+      dockerfile: Dockerfile
+      target: testing
+    command: python -u -m src.modules.events.entrypoint.schedular.main
     volumes:
       - ./src:/app/src/
     env_file:
@@ -45,8 +60,8 @@ services:
     ports:
       - "${POSTGRESQL__PORT}:${POSTGRESQL__PORT}"
     volumes:
-      - devdb-volume:/var/lib/postgresql/data
-
+      - db_volume:/var/lib/postgresql/data
+  
   pgadmin:
     image: dpage/pgadmin4
     container_name: pgadmin_container
@@ -54,10 +69,13 @@ services:
       PGADMIN_DEFAULT_EMAIL: admin@admin.com
       PGADMIN_DEFAULT_PASSWORD: admin
     ports:
-      - "8080:80"
+      - "8888:80"
     depends_on:
       - db
+    volumes:
+      - pgadmin_volume:/var/lib/pgadmin
 
 name: urlshortener
 volumes:
-  devdb-volume:
+  db_volume:
+  pgadmin_volume:

@@ -1,6 +1,5 @@
 from datetime import datetime
 
-# from sqlalchemy.dialects.postgresql import UUID as PG_UUID
 from sqlalchemy.ext.asyncio import (
     AsyncEngine,
     AsyncSession,
@@ -12,13 +11,10 @@ from sqlalchemy.types import DateTime
 
 from src.core.config import ENVS
 
-ASYNC_ENGINE: AsyncEngine = create_async_engine(
-    ENVS.POSTGRESQL.get_url    
-)
+ASYNC_ENGINE: AsyncEngine = create_async_engine(ENVS.POSTGRESQL.get_url)
 
 SESSION_MAKER: async_sessionmaker[AsyncSession] = async_sessionmaker(
-    ASYNC_ENGINE,
-    expire_on_commit=False
+    ASYNC_ENGINE, expire_on_commit=False
 )
 
 

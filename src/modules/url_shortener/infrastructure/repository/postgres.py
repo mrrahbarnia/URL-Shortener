@@ -3,13 +3,13 @@ import sqlalchemy as sa
 
 from datetime import datetime, UTC
 
+from .. import db_models
+from ...domain import value_objects
+from ...domain import models as domain_models
+
 from sqlalchemy.ext.asyncio import AsyncSession
 from sqlalchemy.dialects.postgresql import insert as upsert
 from src.modules.shared.constants import DBLock
-
-from . import models as db_models
-from ...domain import value_objects
-from ...domain import models as domain_models
 
 
 class CodeRepository:

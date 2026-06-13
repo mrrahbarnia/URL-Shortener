@@ -3,10 +3,11 @@ from datetime import datetime
 
 from uuid6 import uuid7
 
+from .interfaces import ICodeGenerator, IUOW
+from ..domain.models import ShortURL
+
 from src.modules.shared.constants import Error
 
-from .interfaces import IUOW, ICodeGenerator
-from ..domain.models import ShortURL
 
 # TODO - Later we can read this from .env
 FALLBACK_CODE_GENERATION_MAX_RETRIES = 1

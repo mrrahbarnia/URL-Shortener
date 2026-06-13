@@ -2,9 +2,10 @@ import typing as T
 
 from sqlalchemy.ext.asyncio import AsyncSession, async_sessionmaker
 
-from src.modules.shared.infrastructure import SESSION_MAKER
+from ..infrastructure.repository import URLRepository, CodeRepository
 
-from .postgres_repo import CodeRepository, URLRepository
+from src.modules.events.infrastructure.repository import OutboxRepository
+from src.modules.shared.infrastructure.db_metadata import SESSION_MAKER
 
 
 class UOW:
@@ -15,6 +16,13 @@ class UOW:
         self.session_maker = session_maker
         self._urls: URLRepository | None = None
         self._codes: CodeRepository | None = None
+        self._outbox: OutboxRepository | None = None
+
+    @property
+    def outbox(self) -> OutboxRepository:
+        if self._outbox is None:
+            raise RuntimeError("UOW not entered")
+        return self._outbox
 
     @property
     def urls(self) -> URLRepository:

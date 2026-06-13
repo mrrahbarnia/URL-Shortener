@@ -1,8 +1,9 @@
 from datetime import datetime, UTC
 
-from pydantic import BaseModel, HttpUrl, field_validator
-
 from ....domain.value_objects import ShortURLID
+
+
+from pydantic import BaseModel, HttpUrl, field_validator
 
 
 class ShortenURLRequest(BaseModel):

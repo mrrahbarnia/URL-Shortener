@@ -7,8 +7,8 @@ from aioclock import AioClock, Every, Depends
 
 from .dependencies import get_uow, get_code_generator
 from ...service.code_batch_generator import CodeBatchGenerator
-from ...infrastructure.uow import UOW
-from ...infrastructure.code_generator import CodeGenerator
+from ...infrastructure import CodeGenerator, UOW
+
 
 logger = logging.getLogger(__name__)
 

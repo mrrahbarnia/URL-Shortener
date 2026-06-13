@@ -1,8 +1,10 @@
 from fastapi import Request
 
 from .exceptions import BadRequestException
-from ....infrastructure.uow import UOW
 from ....infrastructure.code_generator import CodeGenerator
+
+
+from ....infrastructure import UOW
 
 
 async def get_uow() -> UOW:

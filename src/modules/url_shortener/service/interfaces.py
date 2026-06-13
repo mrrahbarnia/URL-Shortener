@@ -1,9 +1,10 @@
 import typing as T
 
+from ..domain.models import ShortURL
+
 from src.core.config import ENVS
 from src.modules.shared.constants import DBLock
-
-from ..domain.models import ShortURL
+from src.modules.events.service.interfaces import IOutboxRepository
 
 
 class ICodeGenerator(T.Protocol):
@@ -30,6 +31,9 @@ class IURLRepository(T.Protocol):
 
 
 class IUOW(T.Protocol):
+    @property
+    def outbox(self) -> IOutboxRepository: ...
+
     @property
     def urls(self) -> IURLRepository: ...
 

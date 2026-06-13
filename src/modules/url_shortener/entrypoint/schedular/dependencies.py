@@ -1,4 +1,4 @@
-from ...infrastructure.uow import UOW
+from ...infrastructure import UOW
 from ...infrastructure.code_generator import CodeGenerator
 
 
