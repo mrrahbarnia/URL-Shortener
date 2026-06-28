@@ -7,6 +7,8 @@ from fastapi import FastAPI
 
 from .logger import LogConfig
 
+from src.modules.shared.infrastructure.kafka import PRODUCER
+
 
 logger = logging.getLogger(__name__)
 
@@ -17,9 +19,15 @@ async def lifespan(_application: FastAPI) -> T.AsyncGenerator[None, None]:
     logger.info("Logger is running...")
     dictConfig(LogConfig().model_dump())
 
+    logger.info("Kafka producer is running...")
+    await PRODUCER.start()
+
     logger.info("Application is running...")
 
     yield
     # ============================== On shutdown
+
+    logger.info("Kafka producer is gracefully shutting down...")
+    await PRODUCER.stop()
 
     logger.info("Application is shutting down...")
