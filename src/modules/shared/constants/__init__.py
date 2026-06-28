@@ -3,7 +3,7 @@ from .doman_error import DomainError
 from .environment import Environment
 from .service_error import Error, ErrorCode
 from .db_lock import DBLock
-from .aggregate_root import AggregateRoot
+from .entity import Entity
 
 __all__ = [
     "Environment",
@@ -13,5 +13,5 @@ __all__ = [
     "ErrorCode",
     "DBLock",
     "DOMAIN_EVENT_REGISTRY",
-    "AggregateRoot",
+    "Entity",
 ]

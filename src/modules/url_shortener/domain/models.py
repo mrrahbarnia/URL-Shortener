@@ -2,7 +2,7 @@ from dataclasses import dataclass, field
 from datetime import UTC, datetime
 from uuid import UUID
 
-from src.modules.shared.constants import AggregateRoot, DomainError, DomainEvent
+from src.modules.shared.constants import Entity, DomainError, DomainEvent
 
 from . import value_objects
 from .events import LinkVisited
@@ -14,7 +14,7 @@ class LinkExpired(DomainError):
 
 
 @dataclass
-class ShortURL(AggregateRoot):
+class ShortURL(Entity):
     id: value_objects.ShortURLID
     original_url: value_objects.URL
     short_code: value_objects.ShortCode

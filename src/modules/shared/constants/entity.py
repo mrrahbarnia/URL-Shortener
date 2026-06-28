@@ -3,7 +3,7 @@ from dataclasses import dataclass, asdict
 
 
 @dataclass
-class AggregateRoot:
+class Entity:
     def convert_to_dict(self, exclude_none_values: bool) -> dict[str, T.Any]:
         data = asdict(self)
         data.pop("events", None)
