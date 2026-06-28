@@ -1,3 +1,3 @@
-# from .event_processor import event_processor
+from .bootstrap import bootstrap
 
-# __all__ = ["event_processor"]
+__all__ = ["bootstrap"]

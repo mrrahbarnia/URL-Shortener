@@ -8,7 +8,7 @@ KAFKA_CFG = {
 }
 
 
-class _KafkaProducer:
+class KafkaProducer:
     def __init__(self, producer: AIOProducer | None = None) -> None:
         self.producer = producer
 
@@ -31,4 +31,4 @@ class _KafkaProducer:
         return await delivery_future
 
 
-PRODUCER = _KafkaProducer()
+PRODUCER = KafkaProducer()

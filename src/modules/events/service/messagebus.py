@@ -11,18 +11,20 @@ EVENT_HANDLERS: dict[
     str, list[T.Callable[[DomainEvent, DomainEventCtx], T.Awaitable[None] | None]]
 ] = defaultdict(list)
 
-AsyncHandlerType = T.Callable[[DomainEvent, DomainEventCtx], T.Awaitable[None]]
-SyncHandlerType = T.Callable[[DomainEvent, DomainEventCtx], None]
-HandlerType = AsyncHandlerType | SyncHandlerType
+
+EventT = T.TypeVar("EventT", bound=DomainEvent)
+
+AsyncHandlerType = T.Callable[[EventT, DomainEventCtx], T.Awaitable[None]]
+SyncHandlerType = T.Callable[[EventT, DomainEventCtx], None]
+HandlerType = AsyncHandlerType[EventT] | SyncHandlerType[EventT]
 
 
 def handler_register(
-    event_type: type[DomainEvent],
-) -> T.Callable[[HandlerType], HandlerType]:
-    def decorator(fn: HandlerType) -> HandlerType:
+    event_type: type[EventT],
+) -> T.Callable[[HandlerType[EventT]], HandlerType[EventT]]:
+    def decorator(fn: HandlerType[EventT]) -> HandlerType[EventT]:
         event_name_string = event_type.__name__
-        EVENT_HANDLERS[event_name_string].append(fn)
-
+        EVENT_HANDLERS[event_name_string].append(fn)  # type: ignore[arg-type]
         return fn
 
     return decorator

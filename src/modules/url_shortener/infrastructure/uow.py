@@ -79,8 +79,6 @@ class UOW:
         events: list[DomainEvent] = []
 
         for entity in self.urls.seen.values():
-            print("============ Printing events")
-            print(entity)
             while entity.events:
                 events.append(entity.events.pop())
 
