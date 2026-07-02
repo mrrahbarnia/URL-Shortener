@@ -2,9 +2,11 @@ import typing as T
 
 from confluent_kafka.aio import AIOProducer
 
+from src.core.config import ENVS
+
 KAFKA_CFG = {
     "bootstrap.servers": "kafka:9092",
-    "client.id": "url-shortener-producer",
+    "client.id": ENVS.KAFKA.URL_SHORTENER_PRODUCER_CLIENT_ID,
 }
 
 

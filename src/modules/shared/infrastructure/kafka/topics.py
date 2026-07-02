@@ -1,13 +1,19 @@
 from confluent_kafka.admin import AdminClient, NewTopic  # type: ignore
 
+from src.core.config import ENVS
+
 
 def create_topics() -> None:
     admin = AdminClient({"bootstrap.servers": "kafka:9092"})
     topic = NewTopic(
-        topic="url-shortener.link.visited",
-        num_partitions=9,
-        replication_factor=1,
-        config={"min.insync.replicas": "1"},
+        topic=ENVS.KAFKA.URL_SHORTENER_TOPIC_NAME,
+        num_partitions=ENVS.KAFKA.URL_SHORTENER_TOPIC_NUM_PARTITIONS,
+        replication_factor=ENVS.KAFKA.URL_SHORTENER_TOPIC_REPLICATION_FACTOR,
+        config={
+            "min.insync.replicas": str(
+                ENVS.KAFKA.URL_SHORTENER_TOPIC_MIN_INSYNC_REPLICA
+            )
+        },
     )
 
     fs = admin.create_topics([topic])  # type: ignore

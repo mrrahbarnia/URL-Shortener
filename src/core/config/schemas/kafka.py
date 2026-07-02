@@ -1,0 +1,9 @@
+from pydantic_settings import BaseSettings
+
+
+class Kafka(BaseSettings):
+    URL_SHORTENER_TOPIC_NAME: str
+    URL_SHORTENER_TOPIC_NUM_PARTITIONS: int
+    URL_SHORTENER_TOPIC_REPLICATION_FACTOR: int
+    URL_SHORTENER_TOPIC_MIN_INSYNC_REPLICA: int
+    URL_SHORTENER_PRODUCER_CLIENT_ID: str

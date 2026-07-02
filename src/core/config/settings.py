@@ -15,6 +15,7 @@ class _ENVS(BaseSettings):
     CONSTANT: schemas.Constant
     CODE_GENERATOR: schemas.CodeGenerator
     OUTBOX_CONSUMER: schemas.OutboxConsumer
+    KAFKA: schemas.Kafka
 
 
 ENVS = _ENVS()  # type: ignore
